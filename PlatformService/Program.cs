@@ -1,3 +1,6 @@
+using PlatformService.Data;
+using PlatformService.Extensions;
+
 namespace PlatformService
 {
     public class Program
@@ -12,6 +15,11 @@ namespace PlatformService
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            builder.Services.ConfigurePlatformDbContext();
+            builder.Services.ConfigureRepository();
 
             var app = builder.Build();
 
@@ -28,6 +36,8 @@ namespace PlatformService
 
 
             app.MapControllers();
+
+            PrepDb.PrepPopulation(app);
 
             app.Run();
         }
