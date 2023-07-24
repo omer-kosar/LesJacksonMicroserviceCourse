@@ -1,3 +1,5 @@
+using CommandsService.Extensions;
+
 namespace CommandsService
 {
     public class Program
@@ -9,9 +11,13 @@ namespace CommandsService
             // Add services to the container.
 
             builder.Services.AddControllers();
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.ConfigurePlatformDbContext();
+            builder.Services.ConfigureRepository();
 
             var app = builder.Build();
 
