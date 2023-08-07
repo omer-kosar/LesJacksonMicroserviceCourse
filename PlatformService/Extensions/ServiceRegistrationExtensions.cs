@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PlatformService.AsyncDataServices;
 using PlatformService.Data;
 using PlatformService.Data.Interfaces;
 using PlatformService.SyncDataServices.Http;
@@ -21,6 +22,10 @@ namespace PlatformService.Extensions
         public static void ConfigureHttpClient(this IServiceCollection services)
         {
             services.AddScoped<ICommandDataClient, HttpCommandDataClient>();
+        }
+        public static void ConfigureRabbitMQClient(this IServiceCollection services)
+        {
+            services.AddScoped<IMessageBusClient, MessageBusClient>();
         }
     }
 }

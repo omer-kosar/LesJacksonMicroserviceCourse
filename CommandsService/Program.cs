@@ -18,6 +18,8 @@ namespace CommandsService
 
             builder.Services.ConfigurePlatformDbContext();
             builder.Services.ConfigureRepository();
+            builder.Services.ConfigureEventProcess();
+            builder.Services.ConfigureMessageBus();
 
             var app = builder.Build();
 

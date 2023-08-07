@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PlatformService.AsyncDataServices;
 using PlatformService.Data.Interfaces;
 using PlatformService.Dto;
 using PlatformService.Models;
@@ -15,11 +16,14 @@ namespace PlatformService.Controllers
         private readonly IPlatformRepostiory _repostiory;
         private readonly IMapper _mapper;
         private readonly ICommandDataClient _commandDataClient;
-        public PlatformsController(IPlatformRepostiory repostiory, IMapper mapper,ICommandDataClient commandDataClient)
+        private readonly IMessageBusClient _messageBusClient;
+
+        public PlatformsController(IPlatformRepostiory repostiory, IMapper mapper,ICommandDataClient commandDataClient,IMessageBusClient messageBusClient)
         {
             _repostiory = repostiory;
             _mapper = mapper;
             _commandDataClient = commandDataClient;
+            _messageBusClient = messageBusClient;
         }
 
         [HttpGet]
@@ -47,6 +51,17 @@ namespace PlatformService.Controllers
             try
             {
                 await _commandDataClient.SendPlatformToCommand(platformReadItem);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+            try
+            {
+                var platformPublishDto=_mapper.Map<PlatformPublishDto>(platformReadItem);
+                platformPublishDto.Event = "Platform_Published";
+                _messageBusClient.PublishNewPlatform(platformPublishDto); 
             }
             catch (Exception)
             {

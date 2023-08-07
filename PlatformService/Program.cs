@@ -17,10 +17,12 @@ namespace PlatformService
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            builder.Services.AddHttpClient();
 
             builder.Services.ConfigurePlatformDbContext();
             builder.Services.ConfigureRepository();
             builder.Services.ConfigureHttpClient();
+            builder.Services.ConfigureRabbitMQClient();
 
             var app = builder.Build();
 
